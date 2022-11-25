@@ -6,12 +6,12 @@
 
     <groupId>galachesslogic</groupId>
     <artifactId>GalaLogic</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.5-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
 </project>

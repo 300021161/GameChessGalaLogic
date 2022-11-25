@@ -1,31 +1,22 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Elephant extends Figure {
 
     private boolean[][] booleans;
 
-    private Cell[][] field = new Cell[10][10];
+    private Cell[][] field;
 
     public Elephant(boolean colorWhite) {
         super(colorWhite);
     }
 
-    public void stepFigure(Cell start, Cell end, Cell[][] field){
-        stepElephant(start.getX(),start.getY(),field);
-        GameLogic.printStep(getList());
-        for(Cell cell : getList()){
-            if(cell.getX()==end.getX()&&cell.getY()==end.getY()){
-                field[end.getX()][end.getY()].setFigure(field[start.getX()][start.getY()].getFigure());
-                field[start.getX()][start.getY()].setFigure(null);
-            }
-        }
-    }
-
-    private void stepElephant(int x, int y, Cell[][] f){
+    public List<Cell> stepElephant(int x, int y, Cell[][] f){
+        List<Cell> list = new ArrayList<>();
         this.field = f;
         booleans = new boolean[10][10];
-        getList().clear();
         Queue<Cell> queue = new LinkedList<>();
         queue.add(field[x][y]);
         booleans[x][y] = true;
@@ -35,26 +26,26 @@ public class Elephant extends Figure {
                 if(Edge(x + ints[0], y + ints[1])) {
                     if (!field[x + ints[0]][y + ints[1]].getClass().equals(Square.class) &&
                             yourAlien(checkWhite(), field[x + ints[0]][y + ints[1]])) {
-                        getList().add(field[x + ints[0]][y + ints[1]]);
+                        list.add(field[x + ints[0]][y + ints[1]]);
                         booleans[x + ints[0]][y + ints[1]] = true;
                         Cell cellNow = field[x + ints[0]][y + ints[1]];
                         if(field[cellNow.getX()][cellNow.getY()].getFigure()==null) {
                             for (int[] val : getStepC()) {
                                 queue.add(cellNow);
-                                testStep(queue,val[0], val[1],true,false);
+                                testStep(queue,val[0], val[1],true,false,list);
                             }
                         }
                     } else if (field[x + ints[0]][y + ints[1]].getClass().equals(Square.class)) {
-                        testStep(queue,ints[0], ints[1],true,true);
-                        if (size != getList().size() && getList().get(getList().size() - 1).getFigure() == null) {
-                            Cell cellNow = getList().get(getList().size() - 1);
+                        testStep(queue,ints[0], ints[1],true,true,list);
+                        if (size != list.size() && list.get(list.size() - 1).getFigure() == null) {
+                            Cell cellNow = list.get(list.size() - 1);
                             for (int[] val : getStepC()) {
                                 if(Edge(cellNow.getX() + val[0], cellNow.getY() + val[1])&& (
                                         field[cellNow.getX() + val[0]][cellNow.getY() + val[1]].getFigure() == null ||
                                         yourAlien(checkWhite(),field[cellNow.getX() + val[0]][cellNow.getY() + val[1]])) &&
                                         !field[cellNow.getX()][cellNow.getY()].getClass().equals(Square.class)&&
                                         !field[cellNow.getX() + val[0]][cellNow.getY() + val[1]].getClass().equals(Square.class)) {
-                                    getList().add(field[cellNow.getX() + val[0]][cellNow.getY() + val[1]]);
+                                    list.add(field[cellNow.getX() + val[0]][cellNow.getY() + val[1]]);
                                     booleans[cellNow.getX() + val[0]][cellNow.getY() + val[1]] = true;
                                 }
                             }
@@ -62,7 +53,7 @@ public class Elephant extends Figure {
                     }
                     queue.clear();
                     queue.add(field[x][y]);
-                    size = getList().size();
+                    size = list.size();
                 }
             }
         }else {
@@ -70,26 +61,26 @@ public class Elephant extends Figure {
                 if(Edge(x + ints[0], y + ints[1])) {
                     if (field[x + ints[0]][y + ints[1]].getClass().equals(Square.class) &&
                             yourAlien(checkWhite(), field[x + ints[0]][y + ints[1]])) {
-                        getList().add(field[x + ints[0]][y + ints[1]]);
+                        list.add(field[x + ints[0]][y + ints[1]]);
                         booleans[x + ints[0]][y + ints[1]] = true;
                         Cell cellNow = field[x + ints[0]][y + ints[1]];
                         if(field[cellNow.getX()][cellNow.getY()].getFigure()==null) {
                             for (int[] val : getStepD()) {
                                 queue.add(cellNow);
-                                testStep(queue,val[0], val[1],false,true);
+                                testStep(queue,val[0], val[1],false,true,list);
                             }
                         }
                     } else if (!field[x + ints[0]][y + ints[1]].getClass().equals(Square.class)) {
-                        testStep(queue, ints[0], ints[1],false,false);
-                        if (size != getList().size() && getList().get(getList().size() - 1).getFigure() == null) {
-                            Cell cellNow = getList().get(getList().size() - 1);
+                        testStep(queue, ints[0], ints[1],false,false,list);
+                        if (size != list.size() && list.get(list.size() - 1).getFigure() == null) {
+                            Cell cellNow = list.get(list.size() - 1);
                             for (int[] val : getStepD()) {
                                 if (Edge(cellNow.getX() + val[0], cellNow.getY() + val[1]) && (
                                         field[cellNow.getX() + val[0]][cellNow.getY() + val[1]].getFigure() == null ||
                                                 yourAlien(checkWhite(), field[cellNow.getX() + val[0]][cellNow.getY() + val[1]])) &&
                                         field[cellNow.getX()][cellNow.getY()].getClass().equals(Square.class) &&
                                         field[cellNow.getX() + val[0]][cellNow.getY() + val[1]].getClass().equals(Square.class)) {
-                                    getList().add(field[cellNow.getX() + val[0]][cellNow.getY() + val[1]]);
+                                    list.add(field[cellNow.getX() + val[0]][cellNow.getY() + val[1]]);
                                     booleans[cellNow.getX() + val[0]][cellNow.getY() + val[1]] = true;
                                 }
                             }
@@ -97,10 +88,11 @@ public class Elephant extends Figure {
                     }
                     queue.clear();
                     queue.add(field[x][y]);
-                    size = getList().size();
+                    size = list.size();
                 }
             }
         }
+        return list;
     }
 
     private boolean ifCheck(boolean startFromSq,boolean endInSq,int x,int y,int stepX,int stepY){
@@ -115,7 +107,7 @@ public class Elephant extends Figure {
         }
     }
 
-    private void testStep(Queue<Cell> queue, int stepX, int stepY, boolean startFromSq,boolean endInSq ){
+    private void testStep(Queue<Cell> queue, int stepX, int stepY, boolean startFromSq,boolean endInSq,List<Cell> list){
         while(!queue.isEmpty()){
             Cell cellNow = queue.remove();
             int x = cellNow.getX(), y = cellNow.getY();
@@ -123,14 +115,14 @@ public class Elephant extends Figure {
                     ifCheck(startFromSq,endInSq,x,y,stepX,stepY)){
                 if(field[x+stepX][y+stepY].getFigure()!=null) {
                     if(checkWhite()!=field[x+stepX][y+stepY].getFigure().checkWhite()) {
-                        getList().add(field[x + stepX][y + stepY]);
+                        list.add(field[x + stepX][y + stepY]);
                         queue.add(field[x + stepX][y + stepY]);
                         booleans[x + stepX][y + stepY] = true;
                     }
                     queue.clear();
                     break;
                 }else {
-                    getList().add(field[x + stepX][y + stepY]);
+                    list.add(field[x + stepX][y + stepY]);
                     queue.add(field[x + stepX][y + stepY]);
                     booleans[x + stepX][y + stepY] = true;
                 }

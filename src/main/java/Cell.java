@@ -37,12 +37,4 @@ public class Cell{
     public int getY() {
         return y;
     }
-
-    public void chessKing(boolean whiteColor){figure = new King(whiteColor);}
-
-    public void chessPawn(boolean whiteColor){figure = new Pawn(whiteColor);}
-
-    public void chessRook(boolean whiteColor){figure = new Rook(whiteColor);}
-
-    public void chessElephant(boolean whiteColor){figure = new Elephant(whiteColor);}
 }
